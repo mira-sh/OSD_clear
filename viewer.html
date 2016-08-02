@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+      <script src="osd_viewer/openseadragon.js"></script>
+
+      <style type="text/css">
+         .openseadragon1 {
+         height: 90%;
+         }
+         body { text-align: center;
+         }
+         footer {
+         position: absolute;
+         right: 0px;
+         bottom: 0px;
+         left: 0px;
+         padding: 0.3rem;
+         text-align: left;
+         }
+         #viewerContainer {
+         position: absolute;
+         top: 60px;
+         bottom: 10px;
+         left: 0px;
+         right: 0px;
+         overflow: auto;
+         width: 100%;
+         height: auto;
+         text-align: center;
+         }
+      </style>
+   </head>
+   <body>
+
+      <div id="viewerContainer">
+         <div id="contentDiv" class="openseadragon1"></div>
+      </div>
+      <footer>
+            <button id="clearTileBtn" type="button"> tile updated</button>
+       </footer>
+      <script type="text/javascript">
+
+	 var viewer = OpenSeadragon({
+	  id: "contentDiv",
+          prefixUrl: "osd_viewer/images/",
+          tileSources: "mango.dzi",
+          maxZoomPixelRatio: 4,
+          showNavigator: true,
+          debugMode:  true
+         });
+          
+       OpenSeadragon.TileCache.prototype.clearTile = function( url ) {
+//         OpenSeadragon.console.assert(tile, '[TileCache.clearTilesFor] tile is required');
+         var tileRecord;
+         for ( var i = 0; i < this._tilesLoaded.length; ++i ) {
+              tileRecord = this._tilesLoaded[ i ];
+              //check if the given tile is in the cache
+              if ( tileRecord.tile.url.indexOf(url) !== -1 )  {
+                  this._unloadTile(tileRecord);
+                  this._tilesLoaded.splice( i, 1 );
+                  console.log("cleared tile from OSD cache")
+                  return;
+              }
+          }
+      };
+
+     function clearTile() {
+         viewer.tileCache.clearTile("mango_files/10/0_0.jpg");
+      }
+          
+       var clearTileBtn = document.getElementById("clearTileBtn");
+      clearTileBtn.addEventListener("click", clearTile, false);
+
+      </script>
+   </body>
+</html>
