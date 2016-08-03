@@ -11712,7 +11712,9 @@ $.extend( $.DziTileSource.prototype, $.TileSource.prototype, /** @lends OpenSead
      * @param {Number} y
      */
     getTileUrl: function( level, x, y ) {
-        return [ this.tilesUrl, level, '/', x, '_', y, '.', this.fileFormat, this.queryParams ].join( '' );
+       //add timestamp to the url to bypass browsers cache
+        time = new Date().getTime()
+        return [ this.tilesUrl, level, '/', x, '_', y, '.', this.fileFormat, "?v=", time, this.queryParams ].join( '' );
     },
 
 
